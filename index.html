@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#f5f5f7"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="default"
+    >
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="我的体重"
+    >
+
+    <title>我的体重</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =================================================
+         顶部
+    ================================================== -->
+
+    <header class="header">
+
+        <h1>
+            我的体重
+        </h1>
+
+        <p id="todayDate">
+            今天
+        </p>
+
+    </header>
+
+
+
+    <!-- =================================================
+         首页
+    ================================================== -->
+
+    <main
+        id="homePage"
+        class="page active"
+    >
+
+
+        <!-- 当前体重 -->
+
+        <section class="weight-card">
+
+            <div class="weight-label">
+                当前体重
+            </div>
+
+
+            <div class="current-weight">
+
+                <span id="currentWeight">
+                    --
+                </span>
+
+                <small>
+                    kg
+                </small>
+
+            </div>
+
+
+            <div
+                id="weightChange"
+                class="weight-change"
+            >
+                还没有体重记录
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             快速记录
+        ================================================== -->
+
+        <button
+            id="addWeightBtn"
+            class="add-button"
+        >
+
+            <span>
+                ＋
+            </span>
+
+            记录体重
+
+        </button>
+
+
+
+        <!-- =================================================
+             目标体重
+        ================================================== -->
+
+        <section class="goal-card">
+
+            <div class="section-title">
+
+                <span>
+                    目标体重
+                </span>
+
+                <span id="goalWeightText">
+                    未设置
+                </span>
+
+            </div>
+
+
+            <div class="progress-container">
+
+                <div
+                    id="goalProgress"
+                    class="progress-bar"
+                ></div>
+
+            </div>
+
+
+            <div class="goal-info">
+
+                <span id="startWeightText">
+                    起始 -- kg
+                </span>
+
+                <span id="remainWeightText">
+                    还差 -- kg
+                </span>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             体重趋势
+        ================================================== -->
+
+        <section class="trend-card">
+
+
+            <div class="section-title">
+
+                <span>
+                    体重趋势
+                </span>
+
+
+                <div class="period-buttons">
+
+                    <button
+                        class="period-btn active"
+                        data-days="7"
+                    >
+                        7天
+                    </button>
+
+                    <button
+                        class="period-btn"
+                        data-days="30"
+                    >
+                        30天
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="chart-container">
+
+                <canvas
+                    id="weightChart"
+                ></canvas>
+
+
+                <div
+                    id="emptyChart"
+                    class="empty-chart"
+                >
+                    记录几次体重后，
+                    <br>
+                    这里会显示你的变化趋势
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             平均体重
+        ================================================== -->
+
+        <section class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    7日平均
+                </div>
+
+                <div id="avg7">
+                    --
+                </div>
+
+                <span>
+                    kg
+                </span>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    30日平均
+                </div>
+
+                <div id="avg30">
+                    --
+                </div>
+
+                <span>
+                    kg
+                </span>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =================================================
+         历史
+    ================================================== -->
+
+    <main
+        id="historyPage"
+        class="page"
+    >
+
+        <section class="page-card">
+
+
+            <div class="page-title">
+
+                <h2>
+                    历史记录
+                </h2>
+
+                <span id="recordCount">
+                    0 条
+                </span>
+
+            </div>
+
+
+            <div
+                id="historyList"
+                class="history-list"
+            >
+
+                <div class="empty-history">
+                    还没有体重记录
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =================================================
+         统计
+    ================================================== -->
+
+    <main
+        id="statsPage"
+        class="page"
+    >
+
+
+        <section class="page-card">
+
+
+            <div class="page-title">
+
+                <h2>
+                    数据统计
+                </h2>
+
+            </div>
+
+
+
+            <div class="statistics-grid">
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        记录次数
+                    </span>
+
+                    <strong id="totalRecords">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        最高体重
+                    </span>
+
+                    <strong id="maxWeight">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        最低体重
+                    </span>
+
+                    <strong id="minWeight">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        总体平均
+                    </span>
+
+                    <strong id="overallAverage">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        当前 BMI
+                    </span>
+
+                    <strong id="currentBMI">
+                        --
+                    </strong>
+
+                </div>
+
+
+
+                <div class="statistics-item">
+
+                    <span>
+                        累计变化
+                    </span>
+
+                    <strong id="totalChange">
+                        --
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- BMI -->
+
+        <section class="page-card">
+
+
+            <div class="page-title">
+
+                <h2>
+                    BMI
+                </h2>
+
+            </div>
+
+
+            <div class="bmi-display">
+
+                <div id="bmiValue">
+                    --
+                </div>
+
+                <div id="bmiStatus">
+                    请先设置身高
+                </div>
+
+            </div>
+
+
+
+            <div class="bmi-range">
+
+
+                <div>
+
+                    <span>
+                        偏瘦
+                    </span>
+
+                    <b>
+                        &lt;18.5
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        正常
+                    </span>
+
+                    <b>
+                        18.5–23.9
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        超重
+                    </span>
+
+                    <b>
+                        24–27.9
+                    </b>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        肥胖
+                    </span>
+
+                    <b>
+                        ≥28
+                    </b>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =================================================
+         设置
+    ================================================== -->
+
+    <main
+        id="settingsPage"
+        class="page"
+    >
+
+
+        <section class="page-card">
+
+
+            <div class="page-title">
+
+                <h2>
+                    设置
+                </h2>
+
+            </div>
+
+
+
+            <!-- 身高 -->
+
+            <div class="setting-item">
+
+                <label for="heightInput">
+                    身高
+                </label>
+
+
+                <div class="input-with-unit">
+
+                    <input
+                        id="heightInput"
+                        type="number"
+                        min="100"
+                        max="250"
+                        step="0.1"
+                        placeholder="例如 175"
+                    >
+
+                    <span>
+                        cm
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- 目标体重 -->
+
+            <div class="setting-item">
+
+                <label for="goalInput">
+                    目标体重
+                </label>
+
+
+                <div class="input-with-unit">
+
+                    <input
+                        id="goalInput"
+                        type="number"
+                        min="20"
+                        max="300"
+                        step="0.1"
+                        placeholder="例如 68"
+                    >
+
+                    <span>
+                        kg
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <button
+                id="saveSettingsBtn"
+                class="save-button"
+            >
+                保存设置
+            </button>
+
+
+        </section>
+
+
+
+        <!-- 数据管理 -->
+
+        <section class="page-card danger-card">
+
+
+            <div class="page-title">
+
+                <h2>
+                    数据管理
+                </h2>
+
+            </div>
+
+
+            <p>
+                所有体重数据只保存在当前设备的浏览器中，
+                不会上传到服务器。
+            </p>
+
+
+            <button
+                id="clearDataBtn"
+                class="danger-button"
+            >
+                清空所有数据
+            </button>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =================================================
+         底部导航
+    ================================================== -->
+
+    <nav class="bottom-nav">
+
+
+        <button
+            class="nav-item active"
+            data-page="homePage"
+        >
+
+            <span>
+                ⌂
+            </span>
+
+            <small>
+                首页
+            </small>
+
+        </button>
+
+
+
+        <button
+            class="nav-item"
+            data-page="historyPage"
+        >
+
+            <span>
+                ▤
+            </span>
+
+            <small>
+                历史
+            </small>
+
+        </button>
+
+
+
+        <button
+            class="nav-item"
+            data-page="statsPage"
+        >
+
+            <span>
+                ◔
+            </span>
+
+            <small>
+                统计
+            </small>
+
+        </button>
+
+
+
+        <button
+            class="nav-item"
+            data-page="settingsPage"
+        >
+
+            <span>
+                ⚙
+            </span>
+
+            <small>
+                设置
+            </small>
+
+        </button>
+
+
+    </nav>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     记录体重弹窗
+====================================================== -->
+
+<div
+    id="weightModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <h2>
+                记录体重
+            </h2>
+
+            <button
+                id="closeModalBtn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <div class="modal-body">
+
+
+            <label for="weightInput">
+                今天的体重
+            </label>
+
+
+            <div class="weight-input-box">
+
+                <input
+                    id="weightInput"
+                    type="number"
+                    min="20"
+                    max="300"
+                    step="0.01"
+                    placeholder="例如 72.40"
+                >
+
+                <span>
+                    kg
+                </span>
+
+            </div>
+
+
+
+            <label for="dateInput">
+                日期
+            </label>
+
+
+            <input
+                id="dateInput"
+                type="date"
+            >
+
+
+
+            <label for="noteInput">
+                备注（可选）
+            </label>
+
+
+            <textarea
+                id="noteInput"
+                placeholder="例如：早晨空腹、晚饭后……"
+                rows="3"
+            ></textarea>
+
+
+
+            <button
+                id="saveWeightBtn"
+                class="save-weight-button"
+            >
+                保存体重
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     编辑体重弹窗
+====================================================== -->
+
+<div
+    id="editModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <h2>
+                修改记录
+            </h2>
+
+            <button
+                id="closeEditModalBtn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <div class="modal-body">
+
+
+            <label for="editWeightInput">
+                体重
+            </label>
+
+
+            <div class="weight-input-box">
+
+                <input
+                    id="editWeightInput"
+                    type="number"
+                    min="20"
+                    max="300"
+                    step="0.01"
+                >
+
+                <span>
+                    kg
+                </span>
+
+            </div>
+
+
+
+            <label for="editDateInput">
+                日期
+            </label>
+
+
+            <input
+                id="editDateInput"
+                type="date"
+            >
+
+
+
+            <label for="editNoteInput">
+                备注
+            </label>
+
+
+            <textarea
+                id="editNoteInput"
+                rows="3"
+            ></textarea>
+
+
+
+            <button
+                id="updateWeightBtn"
+                class="save-weight-button"
+            >
+                保存修改
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     Chart.js
+====================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/chart.js"
+></script>
+
+
+<!-- =====================================================
+     App JS
+====================================================== -->
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
